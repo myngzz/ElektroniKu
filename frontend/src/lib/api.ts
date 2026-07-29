@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -41,3 +41,9 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+// Rewrite localhost MinIO URLs ke relative path (/products/...) agar bekerja di semua environment
+export function getImageUrl(url: string): string {
+  if (!url) return '/placeholder.svg';
+  return url.replace(/https?:\/\/[^/]+:9\d{3}\/products\//, '/products/');
+}

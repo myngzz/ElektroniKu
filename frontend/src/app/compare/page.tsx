@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import api from '@/lib/api';
+import api, { getImageUrl } from '@/lib/api';
 import { Product, Category } from '@/types';
 import { formatPrice } from '@/lib/auth';
 import { Sparkles, Plus, X, Scale } from 'lucide-react';
@@ -116,7 +116,7 @@ function CompareContent() {
                 </button>
                 <div className="relative w-full aspect-square bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden mb-3">
                   {product.images?.[0] ? (
-                    <Image src={product.images[0]} alt={product.name} fill className="object-contain p-3"
+                    <Image src={getImageUrl(product.images[0])} alt={product.name} fill className="object-contain p-3"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                     />
                   ) : (

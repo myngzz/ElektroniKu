@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import api from '@/lib/api';
+import api, { getImageUrl } from '@/lib/api';
 import { Category, Product } from '@/types';
 import { isLoggedIn, isAdmin } from '@/lib/auth';
 import toast from 'react-hot-toast';
@@ -359,7 +359,7 @@ export default function AdminProductFormPage({ params }: PageProps) {
               {form.images.map((img, i) => (
                 <div key={i} className="relative">
                   <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
-                    <Image src={img} alt={`Gambar ${i+1}`} fill className="object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ''; }} />
+                    <Image src={getImageUrl(img)} alt={`Gambar ${i+1}`} fill className="object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ''; }} />
                   </div>
                   <button
                     type="button"

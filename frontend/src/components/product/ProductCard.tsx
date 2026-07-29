@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Star, ShoppingCart, Heart, Zap } from 'lucide-react';
 import { Product } from '@/types';
 import { formatPrice } from '@/lib/auth';
+import { getImageUrl } from '@/lib/api';
 
 interface ProductCardProps {
   product: Product;
@@ -22,7 +23,7 @@ export default function ProductCard({
   onToggleCompare,
 }: ProductCardProps) {
   const category = typeof product.category === 'object' ? product.category : null;
-  const imageUrl = product.images?.[0] || '/placeholder-product.svg';
+  const imageUrl = getImageUrl(product.images?.[0] || '');
   const discount = product.originalPrice && product.originalPrice > product.price
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;

@@ -4,7 +4,7 @@ import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import api from '@/lib/api';
+import api, { getImageUrl } from '@/lib/api';
 import { Product, Review, Category } from '@/types';
 import SpecTable from '@/components/product/SpecTable';
 import RatingStars from '@/components/ui/RatingStars';
@@ -156,7 +156,7 @@ export default function ProductDetailPage({ params }: PageProps) {
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
-  const images = product.images?.length > 0 ? product.images : [''];
+  const images = product.images?.length > 0 ? product.images.map(getImageUrl) : [''];
 
   let parsedAiSummary: { summary?: string; positives?: string[]; negatives?: string[]; recommendation?: string; sentimentScore?: number; reviewCount?: number } | null = null;
   try {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import api from '@/lib/api';
+import api, { getImageUrl } from '@/lib/api';
 import { Cart as CartType } from '@/types';
 import Loader from '@/components/ui/Loader';
 import { formatPrice, isLoggedIn } from '@/lib/auth';
@@ -83,7 +83,7 @@ export default function CartPage() {
                 <div key={item.product._id} className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-4 flex gap-4">
                   <div className="relative w-20 h-20 bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden shrink-0">
                     {item.product.images?.[0] ? (
-                      <Image src={item.product.images[0]} alt={item.product.name} fill className="object-contain p-1" />
+                      <Image src={getImageUrl(item.product.images[0])} alt={item.product.name} fill className="object-contain p-1" />
                     ) : (
                       <div className="flex items-center justify-center h-full text-2xl">📦</div>
                     )}

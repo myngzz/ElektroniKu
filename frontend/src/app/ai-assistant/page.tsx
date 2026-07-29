@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import api from '@/lib/api';
+import api, { getImageUrl } from '@/lib/api';
 import { AIAssistantResponse, Product } from '@/types';
 import { Send, Bot, User, Sparkles, RefreshCw } from 'lucide-react';
 import { AILoader } from '@/components/ui/Loader';
@@ -165,7 +165,7 @@ export default function AIAssistantPage() {
                           >
                             {p.images?.[0] && (
                               <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-50 mb-1">
-                                <Image src={p.images[0]} alt={p.name || ''} fill className="object-cover" />
+                                <Image src={getImageUrl(p.images[0])} alt={p.name || ''} fill className="object-cover" />
                               </div>
                             )}
                             <p className="text-xs font-medium text-gray-800 dark:text-gray-200 line-clamp-2 mb-0.5">{p.name}</p>

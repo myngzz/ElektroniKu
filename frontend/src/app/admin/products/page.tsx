@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import api from '@/lib/api';
+import api, { getImageUrl } from '@/lib/api';
 import { Product } from '@/types';
 import { isLoggedIn, isAdmin, formatPrice } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
@@ -103,7 +103,7 @@ export default function AdminProductsPage() {
                         <div className="flex items-center gap-3">
                           <div className="relative w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden shrink-0">
                             {p.images?.[0] ? (
-                              <Image src={p.images[0]} alt={p.name} fill className="object-cover" />
+                              <Image src={getImageUrl(p.images[0])} alt={p.name} fill className="object-cover" />
                             ) : (
                               <span className="flex items-center justify-center h-full text-lg">📦</span>
                             )}

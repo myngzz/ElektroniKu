@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import api from '@/lib/api';
+import api, { getImageUrl } from '@/lib/api';
 import { Product } from '@/types';
 import { isLoggedIn, formatPrice } from '@/lib/auth';
 import { Heart, Trash2 } from 'lucide-react';
@@ -68,7 +68,7 @@ export default function WishlistPage() {
                 <div className="relative aspect-square bg-gray-50 dark:bg-gray-700">
                   <Link href={`/catalog/${product._id}`}>
                     {product.images?.[0] ? (
-                      <Image src={product.images[0]} alt={product.name} fill className="object-contain p-3" />
+                      <Image src={getImageUrl(product.images[0])} alt={product.name} fill className="object-contain p-3" />
                     ) : (
                       <div className="flex items-center justify-center h-full text-4xl">📦</div>
                     )}
