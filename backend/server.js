@@ -73,7 +73,7 @@ app.get('/health', (req, res) => {
 app.use('/api', apiLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/products', require('./routes/review.routes')); // /api/products/:id/reviews
+app.use('/api/products/:id/reviews', require('./routes/review.routes'));
 app.use('/api/categories', categoryRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
