@@ -6,7 +6,7 @@ import api from '@/lib/api';
 import { Product, Category, PaginatedResponse } from '@/types';
 import ProductCard from '@/components/product/ProductCard';
 import Loader from '@/components/ui/Loader';
-import { Filter, ChevronLeft, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
+import { Filter, ChevronLeft, ChevronRight, SlidersHorizontal, X, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -29,8 +29,10 @@ function CatalogPageInner() {
     maxPrice: searchParams.get('maxPrice') || '',
     sort: searchParams.get('sort') || 'createdAt',
     search: searchParams.get('search') || '',
+    featured: searchParams.get('featured') || '',
     page: parseInt(searchParams.get('page') || '1'),
   });
+  const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -44,6 +46,7 @@ function CatalogPageInner() {
       if (filters.brand) params.brand = filters.brand;
       if (filters.minPrice) params.minPrice = filters.minPrice;
       if (filters.maxPrice) params.maxPrice = filters.maxPrice;
+      if (filters.featured) params.featured = filters.featured;
 
       // Jika category adalah slug, cari ID-nya
       if (filters.category) {
@@ -115,6 +118,31 @@ function CatalogPageInner() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {/* Search Bar */}
+        <form
+          onSubmit={(e) => { e.preventDefault(); handleFilterChange('search', searchInput); }}
+          className="flex gap-2 mb-6"
+        >
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Cari produk, merek, atau spesifikasi..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {searchInput && (
+              <button type="button" onClick={() => { setSearchInput(''); handleFilterChange('search', ''); }} className="absolute right-3 top-1/2 -translate-y-1/2">
+                <X className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
+          </div>
+          <button type="submit" className="px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-colors">
+            Cari
+          </button>
+        </form>
+
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -144,8 +172,7 @@ function CatalogPageInner() {
                 </h2>
                 {activeFiltersCount > 0 && (
                   <button
-                    onClick={() => setFilters({ category: '', brand: '', minPrice: '', maxPrice: '', sort: 'createdAt', search: '', page: 1 })}
-                    className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1"
+                    onClick={() => setFilters({ category: '', brand: '', minPrice: '', maxPrice: '', sort: 'createdAt', search: '', featured: '', page: 1 })}
                   >
                     <X className="w-3 h-3" /> Reset
                   </button>
@@ -236,7 +263,7 @@ function CatalogPageInner() {
                 <p className="text-5xl mb-4">📦</p>
                 <p className="text-gray-500 dark:text-gray-400">Tidak ada produk yang ditemukan</p>
                 <button
-                  onClick={() => setFilters({ category: '', brand: '', minPrice: '', maxPrice: '', sort: 'createdAt', search: '', page: 1 })}
+                  onClick={() => setFilters({ category: '', brand: '', minPrice: '', maxPrice: '', sort: 'createdAt', search: '', featured: '', page: 1 })}
                   className="mt-3 text-blue-600 hover:underline text-sm"
                 >
                   Reset filter

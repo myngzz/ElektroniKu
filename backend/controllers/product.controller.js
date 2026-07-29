@@ -25,7 +25,15 @@ const getProducts = async (req, res) => {
 
     const filter = { isActive: true };
 
-    if (category) filter.category = category;
+    if (category) {
+      const mongoose = require('mongoose');
+      if (mongoose.Types.ObjectId.isValid(category)) {
+        filter.category = category;
+      } else {
+        const cat = await Category.findOne({ slug: category });
+        if (cat) filter.category = cat._id;
+      }
+    }
     if (brand) filter.brand = { $regex: brand, $options: 'i' };
     if (minPrice || maxPrice) {
       filter.price = {};
