@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
+/* Paksa Tailwind v4 pakai .dark class (bukan media query) — kompatibel dengan next-themes */
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-/* next-themes pakai class strategy, jangan pakai media query untuk dark vars */
 .dark {
   --background: #000000;
   --foreground: #f9fafb;
@@ -24,11 +26,4 @@ html {
 
 body {
   -webkit-font-smoothing: antialiased;
-}
-
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
