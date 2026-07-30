@@ -168,13 +168,13 @@ export default function ProductDetailPage({ params }: PageProps) {
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
-          <Link href="/catalog" className="flex items-center gap-1 hover:text-blue-600">
+          <Link href="/catalog" className="flex items-center gap-1 hover:text-gray-900">
             <ChevronLeft className="w-4 h-4" /> Katalog
           </Link>
           {category && (
             <>
               <span>/</span>
-              <Link href={`/catalog?category=${category.slug}`} className="hover:text-blue-600">{category.name}</Link>
+              <Link href={`/catalog?category=${category.slug}`} className="hover:text-gray-900">{category.name}</Link>
             </>
           )}
           <span>/</span>
@@ -206,7 +206,7 @@ export default function ProductDetailPage({ params }: PageProps) {
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`relative w-16 h-16 rounded-xl border-2 overflow-hidden shrink-0 transition-colors ${selectedImage === i ? 'border-blue-500' : 'border-gray-200 dark:border-gray-700'}`}
+                    className={`relative w-16 h-16 rounded-xl border-2 overflow-hidden shrink-0 transition-colors ${selectedImage === i ? 'border-gray-700' : 'border-gray-200 dark:border-gray-700'}`}
                   >
                     <Image src={img} alt={`Gambar ${i + 1}`} fill className="object-cover" />
                   </button>
@@ -218,7 +218,7 @@ export default function ProductDetailPage({ params }: PageProps) {
           {/* Product Info */}
           <div>
             {category && (
-              <Link href={`/catalog?category=${category.slug}`} className="text-sm text-blue-600 dark:text-blue-400 hover:underline mb-1 block">
+              <Link href={`/catalog?category=${category.slug}`} className="text-sm text-gray-900 dark:text-gray-500 hover:underline mb-1 block">
                 {category.icon} {category.name}
               </Link>
             )}
@@ -265,7 +265,7 @@ export default function ProductDetailPage({ params }: PageProps) {
               <button
                 onClick={handleAddToCart}
                 disabled={product.stock === 0 || addingToCart}
-                className="flex-1 flex items-center justify-center gap-2 py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 py-3 px-6 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {addingToCart ? 'Menambahkan...' : product.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}
@@ -285,7 +285,7 @@ export default function ProductDetailPage({ params }: PageProps) {
             </div>
 
             {/* Compare Link */}
-            <Link href={`/compare?ids=${id}`} className="flex items-center gap-1.5 text-sm text-purple-600 dark:text-purple-400 hover:underline">
+            <Link href={`/compare?ids=${id}`} className="flex items-center gap-1.5 text-sm text-gray-700 dark:text-gray-700 hover:underline">
               <Sparkles className="w-4 h-4" />
               Bandingkan dengan produk lain
               <ArrowRight className="w-3 h-3" />
@@ -300,7 +300,7 @@ export default function ProductDetailPage({ params }: PageProps) {
               <button
                 key={tab}
                 onClick={() => { setActiveTab(tab); if (tab === 'ai') handleGetAIDescription(); if (tab === 'reviews' && reviews.length > 0) handleGetAISummary(); }}
-                className={`px-6 py-4 text-sm font-medium transition-colors border-b-2 -mb-px ${activeTab === tab ? 'border-blue-600 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                className={`px-6 py-4 text-sm font-medium transition-colors border-b-2 -mb-px ${activeTab === tab ? 'border-gray-300 text-gray-900 dark:text-gray-500' : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
               >
                 {tab === 'specs' ? '📋 Spesifikasi' : tab === 'reviews' ? `⭐ Ulasan (${reviews.length})` : '🤖 AI Insight'}
               </button>
@@ -330,10 +330,10 @@ export default function ProductDetailPage({ params }: PageProps) {
               <div>
                 {/* AI Summary */}
                 {reviews.length > 0 && (
-                  <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 mb-6 border border-purple-100 dark:border-purple-800">
+                  <div className="bg-gray-100 dark:bg-gray-100/20 rounded-xl p-4 mb-6 border border-gray-200 dark:border-gray-700">
                     <div className="flex items-center gap-2 mb-2">
                       <span>🤖</span>
-                      <span className="font-semibold text-purple-700 dark:text-purple-400 text-sm">Ringkasan AI</span>
+                      <span className="font-semibold text-gray-700 dark:text-gray-700 text-sm">Ringkasan AI</span>
                     </div>
                     {aiSummaryLoading ? (
                       <AILoader text="Menganalisis ulasan..." />
@@ -357,11 +357,11 @@ export default function ProductDetailPage({ params }: PageProps) {
                           </div>
                         )}
                         {parsedAiSummary.recommendation && (
-                          <p className="text-blue-700 dark:text-blue-400 font-medium">💡 {parsedAiSummary.recommendation}</p>
+                          <p className="text-gray-900 dark:text-white dark:text-gray-500 font-medium">💡 {parsedAiSummary.recommendation}</p>
                         )}
                       </div>
                     ) : (
-                      <button onClick={handleGetAISummary} className="text-sm text-purple-600 dark:text-purple-400 hover:underline">
+                      <button onClick={handleGetAISummary} className="text-sm text-gray-700 dark:text-gray-700 hover:underline">
                         Analisis ulasan dengan AI
                       </button>
                     )}
@@ -387,14 +387,14 @@ export default function ProductDetailPage({ params }: PageProps) {
                     <button
                       type="submit"
                       disabled={isSubmittingReview}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg disabled:opacity-50 transition-colors"
+                      className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg disabled:opacity-50 transition-colors"
                     >
                       {isSubmittingReview ? 'Mengirim...' : 'Kirim Ulasan'}
                     </button>
                   </form>
                 ) : (
                   <div className="text-center py-4 mb-6">
-                    <Link href="/auth/login" className="text-blue-600 hover:underline text-sm">
+                    <Link href="/auth/login" className="text-gray-900 hover:underline text-sm">
                       Masuk untuk menulis ulasan
                     </Link>
                   </div>
@@ -408,7 +408,7 @@ export default function ProductDetailPage({ params }: PageProps) {
                     reviews.map((review) => (
                       <div key={review._id} className="border-b border-gray-100 dark:border-gray-700 pb-4 last:border-0">
                         <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 font-medium text-sm shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-gray-900 dark:text-gray-500 font-medium text-sm shrink-0">
                             {review.user.name?.[0]?.toUpperCase()}
                           </div>
                           <div className="flex-1">
@@ -435,13 +435,13 @@ export default function ProductDetailPage({ params }: PageProps) {
             {activeTab === 'ai' && (
               <div>
                 <h2 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-purple-500" />
+                  <Sparkles className="w-5 h-5 text-gray-700" />
                   Deskripsi AI
                 </h2>
                 {aiDescLoading ? (
                   <AILoader text="AI sedang membuat deskripsi..." />
                 ) : aiDescription ? (
-                  <div className="prose prose-sm dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed bg-purple-50 dark:bg-purple-900/20 rounded-xl p-5 border border-purple-100 dark:border-purple-800">
+                  <div className="prose prose-sm dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-100 dark:bg-gray-100/20 rounded-xl p-5 border border-gray-200 dark:border-gray-700">
                     <ReactMarkdown>{aiDescription}</ReactMarkdown>
                   </div>
                 ) : (
@@ -449,7 +449,7 @@ export default function ProductDetailPage({ params }: PageProps) {
                     <p className="text-gray-500 dark:text-gray-400 mb-3">Deskripsi AI belum tersedia untuk produk ini.</p>
                     <button
                       onClick={handleGetAIDescription}
-                      className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm rounded-lg transition-colors"
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-100 text-white text-sm rounded-lg transition-colors"
                     >
                       Generate Deskripsi AI
                     </button>

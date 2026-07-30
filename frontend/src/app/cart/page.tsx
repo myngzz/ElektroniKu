@@ -63,7 +63,7 @@ export default function CartPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-6">
-          <ShoppingCart className="w-6 h-6 text-blue-600" />
+          <ShoppingCart className="w-6 h-6 text-gray-900" />
           Keranjang Belanja
         </h1>
 
@@ -71,7 +71,7 @@ export default function CartPage() {
           <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl">
             <ShoppingCart className="w-16 h-16 text-gray-200 dark:text-gray-600 mx-auto mb-4" />
             <p className="text-gray-500 dark:text-gray-400 mb-4">Keranjang Anda masih kosong</p>
-            <Link href="/catalog" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm transition-colors">
+            <Link href="/catalog" className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-sm transition-colors">
               Mulai Belanja
             </Link>
           </div>
@@ -89,11 +89,11 @@ export default function CartPage() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <Link href={`/catalog/${item.product._id}`} className="font-medium text-gray-900 dark:text-white hover:text-blue-600 line-clamp-2 text-sm block mb-1">
+                    <Link href={`/catalog/${item.product._id}`} className="font-medium text-gray-900 dark:text-white hover:text-gray-900 line-clamp-2 text-sm block mb-1">
                       {item.product.name}
                     </Link>
                     <p className="text-xs text-gray-500 mb-2">{item.product.brand}</p>
-                    <p className="font-bold text-blue-600 dark:text-blue-400 text-sm mb-3">{formatPrice(item.product.price)}</p>
+                    <p className="font-bold text-gray-900 dark:text-gray-500 text-sm mb-3">{formatPrice(item.product.price)}</p>
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
@@ -143,11 +143,11 @@ export default function CartPage() {
               </div>
               <Link
                 href="/orders/checkout"
-                className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-xl transition-colors"
               >
                 Lanjut ke Checkout <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link href="/catalog" className="block text-center text-sm text-blue-600 dark:text-blue-400 hover:underline mt-3">
+              <Link href="/catalog" className="block text-center text-sm text-gray-900 dark:text-gray-500 hover:underline mt-3">
                 Lanjut Belanja
               </Link>
             </div>

@@ -58,9 +58,9 @@ interface DashboardData {
 
 const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  confirmed: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  processing: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-  shipped: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
+  confirmed: 'bg-gray-100 text-gray-900 dark:text-white dark:bg-zinc-800/30 dark:text-gray-500',
+  processing: 'bg-gray-100 text-gray-700 dark:bg-gray-100/30 dark:text-gray-700',
+  shipped: 'bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-800/30 dark:text-gray-900 dark:text-white',
   delivered: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   cancelled: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
@@ -100,7 +100,7 @@ export default function AdminDashboard() {
       label: 'Total Produk',
       value: data.stats.totalProducts,
       icon: Package,
-      color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
+      color: 'bg-gray-100 dark:bg-zinc-800/30 text-gray-900 dark:text-gray-500',
     },
     {
       label: 'Total Pengguna',
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
       label: 'Total Pesanan',
       value: data.stats.totalOrders,
       icon: ShoppingBag,
-      color: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
+      color: 'bg-gray-100 dark:bg-gray-100/30 text-gray-700 dark:text-gray-700',
     },
     {
       label: 'Total Pendapatan',
@@ -133,7 +133,7 @@ export default function AdminDashboard() {
           </div>
           <Link
             href="/admin/products/new"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-xl transition-colors"
           >
             <Plus className="w-4 h-4" />
             Tambah Produk
@@ -193,7 +193,7 @@ export default function AdminDashboard() {
           <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
               <h2 className="font-semibold text-gray-900 dark:text-white">Pesanan Terbaru</h2>
-              <Link href="/admin/orders" className="text-xs text-blue-600 hover:underline">Lihat semua</Link>
+              <Link href="/admin/orders" className="text-xs text-gray-900 hover:underline">Lihat semua</Link>
             </div>
             <div className="divide-y divide-gray-50 dark:divide-gray-700">
               {data.recentOrders.length === 0 ? (

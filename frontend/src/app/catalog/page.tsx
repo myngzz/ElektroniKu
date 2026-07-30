@@ -130,7 +130,7 @@ function CatalogPageInner() {
               placeholder="Cari produk, merek, atau spesifikasi..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:outline-none focus:border-gray-900 dark:focus:border-white"
             />
             {searchInput && (
               <button type="button" onClick={() => { setSearchInput(''); handleFilterChange('search', ''); }} className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -138,7 +138,7 @@ function CatalogPageInner() {
               </button>
             )}
           </div>
-          <button type="submit" className="px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-colors">
+          <button type="submit" className="px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors">
             Cari
           </button>
         </form>
@@ -158,7 +158,7 @@ function CatalogPageInner() {
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             <SlidersHorizontal className="w-4 h-4" />
-            Filter {activeFiltersCount > 0 && <span className="bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{activeFiltersCount}</span>}
+            Filter {activeFiltersCount > 0 && <span className="bg-gray-900 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{activeFiltersCount}</span>}
           </button>
         </div>
 
@@ -185,7 +185,7 @@ function CatalogPageInner() {
                 <div className="space-y-1">
                   <button
                     onClick={() => handleFilterChange('category', '')}
-                    className={`block w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${!filters.category ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                    className={`block w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${!filters.category ? 'bg-gray-50 dark:bg-zinc-800/30 text-gray-900 dark:text-white dark:text-gray-500 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
                   >
                     Semua Kategori
                   </button>
@@ -193,7 +193,7 @@ function CatalogPageInner() {
                     <button
                       key={cat._id}
                       onClick={() => handleFilterChange('category', cat.slug)}
-                      className={`block w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${filters.category === cat.slug ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                      className={`block w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${filters.category === cat.slug ? 'bg-gray-50 dark:bg-zinc-800/30 text-gray-900 dark:text-white dark:text-gray-500 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
                     >
                       {cat.icon} {cat.name}
                     </button>
@@ -264,7 +264,7 @@ function CatalogPageInner() {
                 <p className="text-gray-500 dark:text-gray-400">Tidak ada produk yang ditemukan</p>
                 <button
                   onClick={() => setFilters({ category: '', brand: '', minPrice: '', maxPrice: '', sort: 'createdAt', search: '', featured: '', page: 1 })}
-                  className="mt-3 text-blue-600 hover:underline text-sm"
+                  className="mt-3 text-gray-900 hover:underline text-sm"
                 >
                   Reset filter
                 </button>
@@ -300,7 +300,7 @@ function CatalogPageInner() {
                         <button
                           key={p}
                           onClick={() => handleFilterChange('page', p)}
-                          className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${p === filters.page ? 'bg-blue-600 text-white' : 'border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
+                          className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${p === filters.page ? 'bg-gray-900 text-white' : 'border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'}`}
                         >
                           {p}
                         </button>
@@ -326,7 +326,7 @@ function CatalogPageInner() {
 
 export default function CatalogPage() {
   return (
-    <Suspense fallback={<div className="text-center py-16"><div className="inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>}>
+    <Suspense fallback={<div className="text-center py-16"><div className="inline-block w-8 h-8 border-4 border-gray-700 border-t-transparent rounded-full animate-spin" /></div>}>
       <CatalogPageInner />
     </Suspense>
   );

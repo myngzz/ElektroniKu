@@ -96,7 +96,7 @@ function CompareContent() {
       <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Scale className="w-6 h-6 text-blue-600" />
+            <Scale className="w-6 h-6 text-gray-900" />
             Bandingkan Produk
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Pilih 2-3 produk dan biarkan AI menganalisis perbandingannya</p>
@@ -123,12 +123,12 @@ function CompareContent() {
                     <div className="flex items-center justify-center h-full text-4xl">📦</div>
                   )}
                 </div>
-                <p className="text-xs text-blue-600 dark:text-blue-400 mb-1">{cat?.icon} {cat?.name}</p>
-                <Link href={`/catalog/${product._id}`} className="font-semibold text-sm text-gray-900 dark:text-white hover:text-blue-600 line-clamp-2 block mb-1">
+                <p className="text-xs text-gray-900 dark:text-gray-500 mb-1">{cat?.icon} {cat?.name}</p>
+                <Link href={`/catalog/${product._id}`} className="font-semibold text-sm text-gray-900 dark:text-white hover:text-gray-900 line-clamp-2 block mb-1">
                   {product.name}
                 </Link>
                 <p className="text-xs text-gray-500 mb-1">{product.brand}</p>
-                <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{formatPrice(product.price)}</p>
+                <p className="text-lg font-bold text-gray-900 dark:text-gray-500">{formatPrice(product.price)}</p>
               </div>
             );
           })}
@@ -148,7 +148,7 @@ function CompareContent() {
           <button
             onClick={handleCompare}
             disabled={selectedProducts.length < 2 || isComparing}
-            className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
           >
             <Sparkles className="w-5 h-5" />
             {isComparing ? 'AI Sedang Menganalisis...' : 'Bandingkan dengan AI'}
@@ -163,9 +163,9 @@ function CompareContent() {
         )}
 
         {comparison && !isComparing && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-purple-100 dark:border-purple-800 p-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 mb-8">
             <h2 className="font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-purple-500" />
+              <Sparkles className="w-5 h-5 text-gray-700" />
               Analisis AI
             </h2>
             <div className="prose prose-sm dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
@@ -196,7 +196,7 @@ function CompareContent() {
                   <tr className="border-t border-gray-100 dark:border-gray-700">
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-400 font-medium">Harga</td>
                     {selectedProducts.map((p) => (
-                      <td key={p._id} className="px-4 py-3 font-bold text-blue-600 dark:text-blue-400">{formatPrice(p.price)}</td>
+                      <td key={p._id} className="px-4 py-3 font-bold text-gray-900 dark:text-gray-500">{formatPrice(p.price)}</td>
                     ))}
                   </tr>
                   <tr className="border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30">
@@ -245,10 +245,10 @@ function CompareContent() {
                 <button
                   key={p._id}
                   onClick={() => addProduct(p)}
-                  className="text-left p-2 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                  className="text-left p-2 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900/20 transition-colors"
                 >
                   <p className="text-xs font-medium text-gray-800 dark:text-gray-200 line-clamp-2 mb-0.5">{p.name}</p>
-                  <p className="text-xs text-blue-600 dark:text-blue-400">{formatPrice(p.price)}</p>
+                  <p className="text-xs text-gray-900 dark:text-gray-500">{formatPrice(p.price)}</p>
                 </button>
               ))}
           </div>

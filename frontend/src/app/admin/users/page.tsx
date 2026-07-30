@@ -36,7 +36,7 @@ export default function AdminUsersPage() {
       <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Users className="w-6 h-6 text-blue-600" />
+            <Users className="w-6 h-6 text-gray-900" />
             Manajemen Pengguna
           </h1>
           <span className="text-sm text-gray-500 dark:text-gray-400">{users.length} pengguna terdaftar</span>
@@ -67,15 +67,15 @@ export default function AdminUsersPage() {
                 <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                        <UserCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800/30 flex items-center justify-center">
+                        <UserCircle2 className="w-5 h-5 text-gray-900 dark:text-gray-500" />
                       </div>
                       <span className="font-medium text-gray-900 dark:text-white">{user.name}</span>
                     </div>
                   </td>
                   <td className="py-3 px-4 text-gray-500 dark:text-gray-400">{user.email}</td>
                   <td className="py-3 px-4">
-                    <span className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium ${user.role === 'admin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'}`}>
+                    <span className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium ${user.role === 'admin' ? 'bg-gray-100 text-gray-700 dark:bg-gray-100/30 dark:text-gray-700' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'}`}>
                       {user.role === 'admin' && <Shield className="w-3 h-3" />}
                       {user.role}
                     </span>

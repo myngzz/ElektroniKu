@@ -40,7 +40,7 @@ function LoginForm() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold text-2xl">
+          <Link href="/" className="inline-flex items-center gap-2 text-gray-900 dark:text-gray-500 font-bold text-2xl">
             <Cpu className="w-7 h-7" />
             ElektroniKu
           </Link>
@@ -57,7 +57,7 @@ function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="nama@email.com"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
             <div>
@@ -69,7 +69,7 @@ function LoginForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
                 <button
                   type="button"
@@ -84,14 +84,14 @@ function LoginForm() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium rounded-xl transition-colors"
+              className="w-full py-3 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white font-medium rounded-xl transition-colors"
             >
               {isLoading ? 'Memproses...' : 'Masuk'}
             </button>
           </form>
 
           {/* Demo accounts */}
-          <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-xs text-gray-600 dark:text-gray-400">
+          <div className="mt-4 p-3 bg-gray-50 dark:bg-zinc-800/20 rounded-xl text-xs text-gray-600 dark:text-gray-400">
             <p className="font-medium text-gray-700 dark:text-gray-300 mb-1">Akun Demo:</p>
             <p>Admin: <span className="font-mono">admin@elektroniku.id</span> / <span className="font-mono">admin123</span></p>
             <p>User: <span className="font-mono">user@test.com</span> / <span className="font-mono">user123</span></p>
@@ -99,7 +99,7 @@ function LoginForm() {
 
           <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-5">
             Belum punya akun?{' '}
-            <Link href="/auth/register" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+            <Link href="/auth/register" className="text-gray-900 dark:text-gray-500 hover:underline font-medium">
               Daftar sekarang
             </Link>
           </p>

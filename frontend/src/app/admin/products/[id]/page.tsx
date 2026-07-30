@@ -290,7 +290,7 @@ export default function AdminProductFormPage({ params }: PageProps) {
                 type="button"
                 onClick={handleGenerateDescription}
                 disabled={aiDescLoading}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg hover:bg-purple-100 disabled:opacity-50 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-100/30 text-gray-700 dark:text-gray-700 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition-colors"
               >
                 {aiDescLoading ? <AILoader text="" /> : <Sparkles className="w-4 h-4" />}
                 {aiDescLoading ? 'AI Membuat...' : 'Generate AI'}
@@ -345,7 +345,7 @@ export default function AdminProductFormPage({ params }: PageProps) {
               <button
                 type="button"
                 onClick={addSpec}
-                className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg"
+                className="px-3 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm rounded-lg"
               >
                 Tambah
               </button>
@@ -372,7 +372,7 @@ export default function AdminProductFormPage({ params }: PageProps) {
               ))}
               <label className="w-20 h-20 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 {uploadingImage ? (
-                  <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-gray-700 border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
                     <Upload className="w-4 h-4 text-gray-400" />
@@ -392,7 +392,7 @@ export default function AdminProductFormPage({ params }: PageProps) {
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-colors"
+              className="px-5 py-2.5 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white text-sm font-medium rounded-xl transition-colors"
             >
               {isSaving ? 'Menyimpan...' : isNew ? 'Buat Produk' : 'Simpan Perubahan'}
             </button>

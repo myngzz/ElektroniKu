@@ -108,8 +108,8 @@ export default function AIAssistantPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/50 rounded-xl flex items-center justify-center">
-              <Bot className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+            <div className="w-10 h-10 bg-gray-100 dark:bg-gray-100/50 rounded-xl flex items-center justify-center">
+              <Bot className="w-6 h-6 text-gray-700 dark:text-gray-700" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -134,15 +134,15 @@ export default function AIAssistantPage() {
           <div className="h-[500px] overflow-y-auto p-4 space-y-4">
             {messages.map((msg, i) => (
               <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-blue-100 dark:bg-blue-900' : 'bg-purple-100 dark:bg-purple-900'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-gray-100 dark:bg-zinc-800' : 'bg-gray-100 dark:bg-gray-100'}`}>
                   {msg.role === 'user' ? (
-                    <User className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <User className="w-4 h-4 text-gray-900 dark:text-gray-500" />
                   ) : (
-                    <Bot className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                    <Bot className="w-4 h-4 text-gray-700 dark:text-gray-700" />
                   )}
                 </div>
                 <div className={`flex-1 max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
-                  <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-blue-600 text-white rounded-tr-sm' : 'bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-tl-sm'}`}>
+                  <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-gray-900 text-white rounded-tr-sm' : 'bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-tl-sm'}`}>
                     {msg.role === 'assistant' ? (
                       <div className="prose prose-sm dark:prose-invert max-w-none">
                         <ReactMarkdown>{msg.content}</ReactMarkdown>
@@ -169,7 +169,7 @@ export default function AIAssistantPage() {
                               </div>
                             )}
                             <p className="text-xs font-medium text-gray-800 dark:text-gray-200 line-clamp-2 mb-0.5">{p.name}</p>
-                            <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold">
+                            <p className="text-xs text-gray-900 dark:text-gray-500 font-semibold">
                               {p.price ? formatPrice(p.price) : '-'}
                             </p>
                           </Link>
@@ -187,8 +187,8 @@ export default function AIAssistantPage() {
 
             {isLoading && (
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center shrink-0">
-                  <Bot className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-100 flex items-center justify-center shrink-0">
+                  <Bot className="w-4 h-4 text-gray-700 dark:text-gray-700" />
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl rounded-tl-sm px-4 py-3">
                   <AILoader />
@@ -207,7 +207,7 @@ export default function AIAssistantPage() {
                   key={i}
                   onClick={() => sendMessage(q)}
                   disabled={isLoading}
-                  className="shrink-0 text-xs px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 disabled:opacity-50 transition-colors"
+                  className="shrink-0 text-xs px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-100/30 text-gray-700 dark:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-100/50 disabled:opacity-50 transition-colors"
                 >
                   {q}
                 </button>
@@ -224,12 +224,12 @@ export default function AIAssistantPage() {
                 onKeyPress={handleKeyPress}
                 placeholder="Tanya tentang produk elektronik..."
                 rows={1}
-                className="flex-1 text-sm border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 bg-gray-50 dark:bg-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="flex-1 text-sm border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 bg-gray-50 dark:bg-gray-700 resize-none focus:outline-none focus:outline-none focus:border-gray-400"
               />
               <button
                 onClick={() => sendMessage()}
                 disabled={!input.trim() || isLoading}
-                className="p-3 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors"
+                className="p-3 bg-gray-100 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors"
               >
                 <Send className="w-5 h-5" />
               </button>

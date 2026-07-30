@@ -72,7 +72,7 @@ export default function CheckoutPage() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <ShoppingBag className="w-16 h-16 text-gray-300 dark:text-gray-600" />
         <p className="text-gray-500">Keranjang kosong. Tidak bisa checkout.</p>
-        <Link href="/catalog" className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm">
+        <Link href="/catalog" className="px-5 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-sm">
           Kembali Belanja
         </Link>
       </div>
@@ -162,13 +162,13 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between font-bold text-gray-900 dark:text-white pt-2 border-t border-gray-100 dark:border-gray-700">
                     <span>Total</span>
-                    <span className="text-blue-600 dark:text-blue-400">{formatPrice(total)}</span>
+                    <span className="text-gray-900 dark:text-gray-500">{formatPrice(total)}</span>
                   </div>
                 </div>
                 <button
                   type="submit"
                   disabled={isPlacingOrder}
-                  className="w-full mt-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium rounded-xl transition-colors"
+                  className="w-full mt-4 py-3 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white font-medium rounded-xl transition-colors"
                 >
                   {isPlacingOrder ? 'Memproses...' : 'Buat Pesanan'}
                 </button>

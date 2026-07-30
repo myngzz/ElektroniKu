@@ -62,7 +62,7 @@ export default function AdminProductsPage() {
           </div>
           <Link
             href="/admin/products/new"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-xl transition-colors"
           >
             <Plus className="w-4 h-4" />
             Tambah Produk
@@ -123,7 +123,7 @@ export default function AdminProductsPage() {
                       <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{p.avgRating}/5 ⭐</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <Link href={`/catalog/${p._id}`} target="_blank" className="p-1.5 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                          <Link href={`/catalog/${p._id}`} target="_blank" className="p-1.5 text-gray-400 hover:text-gray-900 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/20">
                             <Eye className="w-4 h-4" />
                           </Link>
                           <Link href={`/admin/products/${p._id}`} className="p-1.5 text-gray-400 hover:text-green-600 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20">

@@ -47,7 +47,7 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold text-2xl">
+          <Link href="/" className="inline-flex items-center gap-2 text-gray-900 dark:text-gray-500 font-bold text-2xl">
             <Cpu className="w-7 h-7" />
             ElektroniKu
           </Link>
@@ -64,7 +64,7 @@ export default function RegisterPage() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
                 placeholder="Budi Santoso"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
             <div>
@@ -75,7 +75,7 @@ export default function RegisterPage() {
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 required
                 placeholder="nama@email.com"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
             <div>
@@ -87,7 +87,7 @@ export default function RegisterPage() {
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   required
                   placeholder="Minimal 6 karakter"
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
                 <button
                   type="button"
@@ -106,14 +106,14 @@ export default function RegisterPage() {
                 onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
                 required
                 placeholder="Ulangi password"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
               />
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium rounded-xl transition-colors"
+              className="w-full py-3 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white font-medium rounded-xl transition-colors"
             >
               {isLoading ? 'Mendaftar...' : 'Daftar Sekarang'}
             </button>
@@ -121,7 +121,7 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-5">
             Sudah punya akun?{' '}
-            <Link href="/auth/login" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">
+            <Link href="/auth/login" className="text-gray-900 dark:text-gray-500 hover:underline font-medium">
               Masuk
             </Link>
           </p>
