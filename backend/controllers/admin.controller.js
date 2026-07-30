@@ -229,4 +229,67 @@ const getUsers = async (req, res) => {
   }
 };
 
-module.exports = { getDashboard, getOrders, updateOrderStatus, getUsers };
+/**
+ * @desc    Daftar semua review (admin)
+ * @route   GET /api/admin/reviews
+ */
+const getReviews = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, rating } = req.query;
+    const filter = rating ? { rating: parseInt(rating) } : {};
+
+    const [reviews, total] = await Promise.all([
+      Review.find(filter)
+        .populate('user', 'name email')
+        .populate('product', 'name brand images')
+        .sort({ createdAt: -1 })
+        .skip((parseInt(page) - 1) * parseInt(limit))
+        .limit(parseInt(limit))
+        .lean(),
+      Review.countDocuments(filter),
+    ]);
+
+    res.json({
+      success: true,
+      data: reviews,
+      pagination: { total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) },
+    });
+  } catch (error) {
+    logger.error(`getReviews error: ${error.message}`);
+    res.status(500).json({ success: false, message: 'Gagal mengambil daftar review' });
+  }
+};
+
+/**
+ * @desc    Hapus review (admin)
+ * @route   DELETE /api/admin/reviews/:id
+ */
+const deleteReview = async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) {
+      return res.status(404).json({ success: false, message: 'Review tidak ditemukan' });
+    }
+
+    const productId = review.product;
+    await review.deleteOne();
+
+    // Recalculate product rating
+    const reviews = await Review.find({ product: productId });
+    const avgRating = reviews.length
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : 0;
+    await Product.findByIdAndUpdate(productId, {
+      avgRating: parseFloat(avgRating.toFixed(1)),
+      reviewCount: reviews.length,
+    });
+
+    logger.info(`Review ${req.params.id} dihapus oleh admin ${req.user._id}`);
+    res.json({ success: true, message: 'Review berhasil dihapus' });
+  } catch (error) {
+    logger.error(`deleteReview error: ${error.message}`);
+    res.status(500).json({ success: false, message: 'Gagal menghapus review' });
+  }
+};
+
+module.exports = { getDashboard, getOrders, updateOrderStatus, getUsers, getReviews, deleteReview };

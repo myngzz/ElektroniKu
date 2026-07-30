@@ -42,8 +42,8 @@ api.interceptors.response.use(
 
 export default api;
 
-// Rewrite localhost MinIO URLs ke relative path (/products/...) agar bekerja di semua environment
+// Rewrite absolute MinIO URLs ke relative path (/products/...) agar bekerja di semua environment
 export function getImageUrl(url: string): string {
   if (!url) return '/placeholder.svg';
-  return url.replace(/https?:\/\/[^/]+:9\d{3}\/products\//, '/products/');
+  return url.replace(/https?:\/\/[^/]+\/products\//, '/products/');
 }

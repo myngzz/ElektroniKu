@@ -30,6 +30,9 @@ const adminRoutes = require('./routes/admin.routes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// trust nginx reverse proxy so rate-limiter uses real client IP
+app.set('trust proxy', 1);
+
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },

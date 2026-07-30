@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const logger = require('./logger.service');
 
 const OLLAMA_URL = process.env.OLLAMA_API_URL || 'https://ollama.if.unismuh.ac.id/api/generate';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3';
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b-instruct';
 const TIMEOUT_MS = 30000; // 30 detik timeout
 
 /**

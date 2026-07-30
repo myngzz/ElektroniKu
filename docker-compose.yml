@@ -106,9 +106,11 @@ services:
     container_name: elektroniku-frontend
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost/api
+      NEXT_PUBLIC_API_URL: ""
       NEXT_PUBLIC_APP_NAME: ElektroniKu
-      NEXT_PUBLIC_MINIO_URL: http://localhost:9000/products
+      NEXT_PUBLIC_MINIO_URL: ""
+      BACKEND_URL: http://backend:5000
+      MINIO_INTERNAL_URL: http://minio:9000
     volumes:
       - ./frontend:/app
       - /app/node_modules

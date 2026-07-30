@@ -1,16 +1,8 @@
 @import "tailwindcss";
 
-/* Paksa Tailwind v4 pakai .dark class (bukan media query) — kompatibel dengan next-themes */
-@variant dark (&:where(.dark, .dark *));
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-.dark {
-  --background: #000000;
-  --foreground: #f9fafb;
 }
 
 @theme inline {

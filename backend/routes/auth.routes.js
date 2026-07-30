@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
-const { register, login, getMe, updateProfile } = require('../controllers/auth.controller');
+const { register, login, getMe, updateProfile, changePassword } = require('../controllers/auth.controller');
 const { protect } = require('../middlewares/auth.middleware');
 const { authLimiter } = require('../middlewares/rateLimiter');
 
@@ -157,5 +157,6 @@ router.get('/me', protect, getMe);
  *         description: Profil berhasil diupdate
  */
 router.put('/me', protect, updateProfile);
+router.put('/change-password', protect, changePassword);
 
 module.exports = router;

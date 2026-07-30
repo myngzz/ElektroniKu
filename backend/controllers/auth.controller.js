@@ -136,4 +136,35 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getMe, updateProfile };
+/**
+ * @desc    Ganti password user
+ * @route   PUT /api/auth/change-password
+ * @access  Private
+ */
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Password lama dan baru wajib diisi' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password baru minimal 6 karakter' });
+    }
+
+    const user = await User.findById(req.user._id).select('+passwordHash');
+    if (!user || !(await user.matchPassword(currentPassword))) {
+      return res.status(401).json({ success: false, message: 'Password lama salah' });
+    }
+
+    user.passwordHash = newPassword;
+    await user.save();
+
+    logger.info(`Password diubah: user ${req.user._id}`);
+    res.json({ success: true, message: 'Password berhasil diubah' });
+  } catch (error) {
+    logger.error(`changePassword error: ${error.message}`);
+    res.status(500).json({ success: false, message: 'Gagal mengubah password' });
+  }
+};
+
+module.exports = { register, login, getMe, updateProfile, changePassword };

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getDashboard, getOrders, updateOrderStatus, getUsers } = require('../controllers/admin.controller');
+const { getDashboard, getOrders, updateOrderStatus, getUsers, getReviews, deleteReview } = require('../controllers/admin.controller');
 const { protect, adminOnly } = require('../middlewares/auth.middleware');
 
 router.use(protect, adminOnly);
@@ -112,5 +112,7 @@ router.put('/orders/:id', updateOrderStatus);
  *         description: Daftar user
  */
 router.get('/users', getUsers);
+router.get('/reviews', getReviews);
+router.delete('/reviews/:id', deleteReview);
 
 module.exports = router;
