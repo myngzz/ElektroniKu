@@ -37,7 +37,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-white antialiased">
+      <body className="min-h-full flex flex-col bg-white dark:bg-black text-gray-900 dark:text-white antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar />
           <main className="flex-1">{children}</main>
