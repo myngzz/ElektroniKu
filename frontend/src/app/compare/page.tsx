@@ -5,7 +5,8 @@ import { useSearchParams } from'next/navigation';
 import api, { getImageUrl } from'@/lib/api';
 import { Product, Category } from'@/types';
 import { formatPrice } from'@/lib/auth';
-import { Sparkles, Plus, X, Scale } from'lucide-react';
+import { Sparkles, Plus, X, Scale, Package } from'lucide-react';
+import CategoryIcon from'@/components/ui/CategoryIcon';
 import Image from'next/image';
 import ReactMarkdown from'react-markdown';
 import { AILoader } from'@/components/ui/Loader';
@@ -120,10 +121,10 @@ function CompareContent() {
  onError={(e) => { (e.target as HTMLImageElement).style.display ='none'; }}
  />
  ) : (
- <div className="flex items-center justify-center h-full text-4xl">📦</div>
+ <div className="flex items-center justify-center h-full"><Package className="w-10 h-10 text-gray-300" strokeWidth={1.5} /></div>
  )}
  </div>
- <p className="text-xs text-gray-900 mb-1">{cat?.icon} {cat?.name}</p>
+ <p className="text-xs text-gray-900 mb-1 flex items-center gap-1"><CategoryIcon slug={cat?.slug} className="w-3.5 h-3.5" /> {cat?.name}</p>
  <Link href={`/catalog/${product._id}`} className="font-semibold text-sm text-gray-900 hover:text-gray-900 line-clamp-2 block mb-1">
  {product.name}
  </Link>
@@ -148,7 +149,7 @@ function CompareContent() {
  <button
  onClick={handleCompare}
  disabled={selectedProducts.length < 2 || isComparing}
- className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
+ className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors"
  >
  <Sparkles className="w-5 h-5" />
  {isComparing ?'AI Sedang Menganalisis...' :'Bandingkan dengan AI'}

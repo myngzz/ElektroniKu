@@ -7,7 +7,8 @@ import { useRouter } from'next/navigation';
 import Loader from'@/components/ui/Loader';
 import {
  Package, Users, ShoppingBag, DollarSign,
- TrendingUp, TrendingDown, AlertTriangle, Plus
+ TrendingUp, TrendingDown, AlertTriangle, Plus,
+ Tag, MessageSquare, BookOpen
 } from'lucide-react';
 import Link from'next/link';
 import {
@@ -265,12 +266,12 @@ export default function AdminDashboard() {
  {/* Quick Links */}
  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mt-6">
  {[
- { label:'Kelola Produk', href:'/admin/products', icon:'📦' },
- { label:'Daftar User', href:'/admin/users', icon:'👥' },
- { label:'Semua Pesanan', href:'/admin/orders', icon:'🛍️' },
- { label:'Kategori', href:'/admin/categories', icon:'🏷️' },
- { label:'Moderasi Review', href:'/admin/reviews', icon:'💬' },
- { label:'Swagger API', href:'http://localhost:5000/api-docs', icon:'📚', external: true },
+ { label:'Kelola Produk', href:'/admin/products', icon: Package },
+ { label:'Daftar User', href:'/admin/users', icon: Users },
+ { label:'Semua Pesanan', href:'/admin/orders', icon: ShoppingBag },
+ { label:'Kategori', href:'/admin/categories', icon: Tag },
+ { label:'Moderasi Review', href:'/admin/reviews', icon: MessageSquare },
+ { label:'Swagger API', href:'http://localhost:5000/api-docs', icon: BookOpen, external: true },
  ].map((link) => (
  <Link
  key={link.href}
@@ -278,7 +279,7 @@ export default function AdminDashboard() {
  target={link.external ?'_blank' : undefined}
  className="bg-white rounded-xl border border-gray-100 p-4 text-center hover:shadow-md transition-shadow"
  >
- <span className="text-2xl block mb-2">{link.icon}</span>
+ <link.icon className="w-6 h-6 mx-auto mb-2 text-gray-500" strokeWidth={1.5} />
  <span className="text-sm font-medium text-gray-700">{link.label}</span>
  </Link>
  ))}

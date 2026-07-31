@@ -6,8 +6,9 @@ import api from'@/lib/api';
 import { Product, Category } from'@/types';
 import ProductCard from'@/components/product/ProductCard';
 import {
- Sparkles, ArrowRight, Search, ChevronRight, Bot
+ Sparkles, ArrowRight, Search, ChevronRight, Bot, Scale, FileText
 } from'lucide-react';
+import CategoryIcon from'@/components/ui/CategoryIcon';
 import { useAuth } from'@/hooks/useAuth';
 import { useRouter } from'next/navigation';
 
@@ -95,7 +96,7 @@ export default function HomePage() {
  <div className="grid grid-cols-5 gap-2">
  {categories.map((cat) => (
  <Link key={cat._id} href={`/catalog?category=${cat.slug}`} className="flex flex-col items-center gap-2 p-5 bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 transition-all group text-center">
- <span className="text-2xl group-hover:scale-110 transition-transform">{cat.icon}</span>
+ <CategoryIcon slug={cat.slug} className="w-6 h-6 text-gray-400 group-hover:text-gray-900 group-hover:scale-110 transition-all" />
  <p className="text-xs font-medium text-gray-600">{cat.name}</p>
  </Link>
  ))}
@@ -124,12 +125,12 @@ export default function HomePage() {
  <p className="text-[11px] uppercase tracking-[0.2em] text-gray-400 font-medium mb-6">Fitur AI</p>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-gray-100">
  {[
- { icon:'🤖', title:'AI Assistant', desc:'Tanya apa saja tentang produk elektronik.', href:'/ai-assistant' },
- { icon:'⚖️', title:'Bandingkan Produk', desc:'Analisis mendalam perbandingan 2–3 produk.', href:'/compare' },
- { icon:'📝', title:'Ringkas Review', desc:'Rangkuman ulasan pengguna oleh AI.', href:'/catalog' },
+ { icon: Bot, title:'AI Assistant', desc:'Tanya apa saja tentang produk elektronik.', href:'/ai-assistant' },
+ { icon: Scale, title:'Bandingkan Produk', desc:'Analisis mendalam perbandingan 2–3 produk.', href:'/compare' },
+ { icon: FileText, title:'Ringkas Review', desc:'Rangkuman ulasan pengguna oleh AI.', href:'/catalog' },
  ].map((f) => (
  <Link key={f.title} href={f.href} className="flex gap-4 items-start p-6 bg-white hover:bg-gray-50 transition-colors">
- <span className="text-2xl shrink-0 mt-0.5">{f.icon}</span>
+ <f.icon className="w-5 h-5 shrink-0 mt-0.5 text-gray-400" strokeWidth={1.5} />
  <div>
  <h3 className="font-semibold text-gray-900 text-sm mb-1">{f.title}</h3>
  <p className="text-xs text-gray-500 mb-3">{f.desc}</p>

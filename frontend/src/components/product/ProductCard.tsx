@@ -36,7 +36,7 @@ export default function ProductCard({
  fill
  className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
  onError={(e) => {
- (e.target as HTMLImageElement).src ="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f9fafb'/%3E%3Ctext x='200' y='200' text-anchor='middle' dy='.3em' fill='%23d1d5db' font-size='64'%3E📷%3C/text%3E%3C/svg%3E";
+ (e.target as HTMLImageElement).src ="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f9fafb'/%3E%3Cg fill='none' stroke='%23d1d5db' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='152' y='152' width='96' height='96' rx='8'/%3E%3Ccircle cx='182' cy='182' r='8'/%3E%3Cpath d='M248 218l-26-26-48 48'/%3E%3C/g%3E%3C/svg%3E";
  }}
  />
  </Link>

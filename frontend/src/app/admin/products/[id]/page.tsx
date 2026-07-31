@@ -230,7 +230,7 @@ export default function AdminProductFormPage({ params }: PageProps) {
  >
  <option value="">Pilih kategori</option>
  {categories.map((c) => (
- <option key={c._id} value={c._id}>{c.icon} {c.name}</option>
+ <option key={c._id} value={c._id}>{c.name}</option>
  ))}
  </select>
  </div>

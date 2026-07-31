@@ -7,6 +7,7 @@ import { Product, Category, PaginatedResponse } from'@/types';
 import ProductCard from'@/components/product/ProductCard';
 import Loader from'@/components/ui/Loader';
 import { Filter, ChevronLeft, ChevronRight, SlidersHorizontal, X, Search } from'lucide-react';
+import CategoryIcon from'@/components/ui/CategoryIcon';
 import toast from'react-hot-toast';
 import { useAuth } from'@/hooks/useAuth';
 
@@ -179,9 +180,9 @@ function CatalogPageInner() {
  <button
  key={cat._id}
  onClick={() => handleFilterChange('category', cat.slug)}
- className={`block w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${filters.category === cat.slug ?'bg-gray-50 text-gray-900 font-medium' :'text-gray-600 hover:bg-gray-50'}`}
+ className={`flex items-center gap-2 w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${filters.category === cat.slug ?'bg-gray-50 text-gray-900 font-medium' :'text-gray-600 hover:bg-gray-50'}`}
  >
- {cat.icon} {cat.name}
+ <CategoryIcon slug={cat.slug} className="w-4 h-4 shrink-0" /> {cat.name}
  </button>
  ))}
  </div>

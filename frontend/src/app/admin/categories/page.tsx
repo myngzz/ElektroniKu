@@ -8,6 +8,7 @@ import { isLoggedIn, isAdmin } from'@/lib/auth';
 import toast from'react-hot-toast';
 import Loader from'@/components/ui/Loader';
 import { Tag, Plus, Pencil, Trash2, X, Check } from'lucide-react';
+import CategoryIcon from'@/components/ui/CategoryIcon';
 
 const emptyForm = {
  name:'',
@@ -128,7 +129,7 @@ export default function AdminCategoriesPage() {
  <div key={cat._id} className="bg-white rounded-2xl border border-gray-100 p-5">
  <div className="flex items-start justify-between mb-2">
  <div className="flex items-center gap-3">
- <span className="text-3xl">{cat.icon}</span>
+ <span className="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-gray-700 shrink-0"><CategoryIcon slug={cat.slug} className="w-5 h-5" /></span>
  <div>
  <p className="font-semibold text-gray-900">{cat.name}</p>
  <p className="text-xs text-gray-400 font-mono">{cat.slug}</p>

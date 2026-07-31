@@ -14,6 +14,7 @@ import {
  Heart, Share2, ChevronLeft, Star,
  Sparkles, ArrowRight, Package
 } from'lucide-react';
+import CategoryIcon from'@/components/ui/CategoryIcon';
 import toast from'react-hot-toast';
 import ReactMarkdown from'react-markdown';
 
@@ -204,8 +205,8 @@ export default function ProductDetailPage({ params }: PageProps) {
  {/* Product Info */}
  <div>
  {category && (
- <Link href={`/catalog?category=${category.slug}`} className="text-sm text-gray-900 hover:underline mb-1 block">
- {category.icon} {category.name}
+ <Link href={`/catalog?category=${category.slug}`} className="text-sm text-gray-900 hover:underline mb-1 flex items-center gap-1.5 w-fit">
+ <CategoryIcon slug={category.slug} className="w-4 h-4" /> {category.name}
  </Link>
  )}
  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
@@ -429,7 +430,7 @@ export default function ProductDetailPage({ params }: PageProps) {
  <p className="text-gray-500 mb-3">Deskripsi AI belum tersedia untuk produk ini.</p>
  <button
  onClick={handleGetAIDescription}
- className="px-4 py-2 bg-gray-100 hover:bg-gray-100 text-white text-sm rounded-lg transition-colors"
+ className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
  >
  Generate Deskripsi AI
  </button>

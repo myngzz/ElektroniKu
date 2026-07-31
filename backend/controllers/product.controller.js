@@ -41,8 +41,17 @@ const getProducts = async (req, res) => {
       if (maxPrice) filter.price.$lte = Number(maxPrice);
     }
     if (featured === 'true') filter.isFeatured = true;
-    if (search) {
-      filter.$text = { $search: search };
+    // Pencarian akurat: setiap kata harus muncul di nama/brand (AND),
+    // bukan $text bawaan Mongo yang bersifat OR antar kata.
+    const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const searchWords = search
+      ? String(search).trim().split(/\s+/).filter(Boolean).slice(0, 10)
+      : [];
+    if (searchWords.length) {
+      filter.$and = searchWords.map((w) => {
+        const rx = new RegExp(escapeRegex(w), 'i');
+        return { $or: [{ name: rx }, { brand: rx }] };
+      });
     }
 
     const sortMap = {
@@ -57,7 +66,7 @@ const getProducts = async (req, res) => {
     const limitNum = Math.min(50, Math.max(1, parseInt(limit)));
     const skip = (pageNum - 1) * limitNum;
 
-    const [products, total] = await Promise.all([
+    let [products, total] = await Promise.all([
       Product.find(filter)
         .populate('category', 'name slug icon')
         .select('-__v')
@@ -67,6 +76,23 @@ const getProducts = async (req, res) => {
         .lean(),
       Product.countDocuments(filter),
     ]);
+
+    // Fallback untuk kueri natural (mis. "earphone wireless terbaik"):
+    // pakai text index diurutkan berdasar skor relevansi.
+    if (searchWords.length && total === 0) {
+      delete filter.$and;
+      filter.$text = { $search: search };
+      [products, total] = await Promise.all([
+        Product.find(filter, { score: { $meta: 'textScore' } })
+          .populate('category', 'name slug icon')
+          .select('-__v')
+          .sort({ score: { $meta: 'textScore' } })
+          .skip(skip)
+          .limit(limitNum)
+          .lean(),
+        Product.countDocuments(filter),
+      ]);
+    }
 
     res.json({
       success: true,

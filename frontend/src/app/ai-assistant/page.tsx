@@ -229,7 +229,7 @@ export default function AIAssistantPage() {
  <button
  onClick={() => sendMessage()}
  disabled={!input.trim() || isLoading}
- className="p-3 bg-gray-100 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors"
+ className="p-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors"
  >
  <Send className="w-5 h-5" />
  </button>
