@@ -70,13 +70,14 @@ function CatalogPageInner() {
  const fetchMeta = async () => {
  const [catRes, brandRes] = await Promise.allSettled([
  api.get('/api/categories'),
- api.get('/api/products/brands'),
+ api.get('/api/products/brands', { params: filters.category ? { category: filters.category } : {} }),
  ]);
  if (catRes.status ==='fulfilled') setCategories(catRes.value.data.data);
  if (brandRes.status ==='fulfilled') setBrands(brandRes.value.data.data);
  };
  fetchMeta();
- }, []);
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [filters.category]);
 
  useEffect(() => {
  fetchData();

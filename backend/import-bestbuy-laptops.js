@@ -18,7 +18,7 @@ const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_SECRET_KEY || 'minioadmin123',
 });
 const BUCKET = process.env.MINIO_BUCKET || 'products';
-const PUBLIC_MINIO_URL = process.env.MINIO_PUBLIC_URL || 'http://localhost:9000';
+const PUBLIC_MINIO_URL = process.env.MINIO_PUBLIC_URL || ''; // kosong = URL relatif via proxy nginx
 const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36';
 const DELAY_MS = 250;
 

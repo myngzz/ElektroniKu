@@ -240,8 +240,26 @@ const deleteProduct = async (req, res) => {
  */
 const getBrands = async (req, res) => {
   try {
-    const brands = await Product.distinct('brand', { isActive: true });
-    res.json({ success: true, data: brands.sort() });
+    const { category, limit = 40 } = req.query;
+    const match = { isActive: true };
+    if (category) {
+      const mongoose = require('mongoose');
+      if (mongoose.Types.ObjectId.isValid(category)) {
+        match.category = new mongoose.Types.ObjectId(category);
+      } else {
+        const cat = await Category.findOne({ slug: category });
+        if (cat) match.category = cat._id;
+      }
+    }
+    // Top brand berdasarkan jumlah produk agar dropdown tetap ringkas
+    const top = await Product.aggregate([
+      { $match: match },
+      { $group: { _id: '$brand', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: Math.min(100, parseInt(limit) || 40) },
+    ]);
+    const brands = top.map((b) => b._id).sort((a, b) => a.localeCompare(b));
+    res.json({ success: true, data: brands });
   } catch (error) {
     logger.error(`getBrands error: ${error.message}`);
     res.status(500).json({ success: false, message: 'Gagal mengambil daftar brand' });

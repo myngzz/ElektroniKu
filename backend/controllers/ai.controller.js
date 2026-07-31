@@ -1,10 +1,105 @@
-const { generateWithRetry } = require('../services/ollama.service');
+  const { generateWithRetry } = require('../services/ollama.service');
 const { getCache, setCache } = require('../services/cache.service');
 const Product = require('../models/Product');
+const Category = require('../models/Category');
 const Review = require('../models/Review');
 const logger = require('../services/logger.service');
 
 const AI_CACHE_TTL = 60 * 60 * 2; // 2 jam
+
+// ===== Retrieval produk yang akurat untuk konteks AI =====
+const STOPWORDS = new Set([
+  'yang', 'untuk', 'dengan', 'atau', 'dan', 'saya', 'aku', 'mau', 'ingin', 'cari',
+  'carikan', 'rekomendasi', 'rekomendasikan', 'tolong', 'dong', 'apa', 'apakah',
+  'bagus', 'terbaik', 'bagusnya', 'murah', 'mahal', 'harga', 'budget', 'dibawah',
+  'bawah', 'diatas', 'atas', 'sekitar', 'juta', 'jutaan', 'ribu', 'ribuan', 'rp',
+  'di', 'ke', 'dari', 'ada', 'punya', 'buat', 'untukku', 'produk', 'barang', 'beli',
+  'the', 'best', 'for', 'with', 'and',
+]);
+
+const CATEGORY_HINTS = [
+  [/smartphone|handphone|\bhp\b|ponsel|iphone|android|galaxy|pixel/i, 'smartphone'],
+  [/laptop|notebook|macbook|chromebook|ultrabook/i, 'laptop'],
+  [/headphone|earphone|earbuds?|\btws\b|headset|airpods/i, 'headphone'],
+  [/kamera|camera|dslr|mirrorless|gopro|action ?cam|camcorder/i, 'kamera'],
+  [/smart ?tv|televisi|\btv\b|\boled\b|\bqled\b/i, 'smart-tv'],
+];
+
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+function parsePriceIDR(text) {
+  const toIDR = (num, unit) => {
+    const n = parseFloat(String(num).replace(',', '.'));
+    if (Number.isNaN(n)) return null;
+    return /juta|jt/i.test(unit || '') ? n * 1e6 : /ribu|rb/i.test(unit || '') ? n * 1e3 : n;
+  };
+  const out = {};
+  let m = text.match(/(?:di ?bawah|kurang dari|maksimal|max(?:imum)?|budget)\s*(?:rp\.?\s*)?(\d+(?:[.,]\d+)?)\s*(juta|jt|ribu|rb)?/i);
+  if (m) out.maxPrice = toIDR(m[1], m[2]);
+  m = text.match(/(?:di ?atas|lebih dari|minimal|min(?:imum)?)\s*(?:rp\.?\s*)?(\d+(?:[.,]\d+)?)\s*(juta|jt|ribu|rb)?/i);
+  if (m) out.minPrice = toIDR(m[1], m[2]);
+  // "5 jutaan" tanpa kata kunci arah dianggap batas atas
+  if (!out.maxPrice && !out.minPrice) {
+    m = text.match(/(\d+(?:[.,]\d+)?)\s*juta(?:an)?/i);
+    if (m) out.maxPrice = toIDR(m[1], 'juta') * 1.2;
+  }
+  return out;
+}
+
+function keywordsOf(text) {
+  return String(text).toLowerCase().split(/\s+/)
+    .map((w) => w.replace(/[^a-z0-9+-]/g, ''))
+    .filter((w) => w.length >= 2 && !STOPWORDS.has(w))
+    .slice(0, 10);
+}
+
+// Kata jenis produk (earbuds, laptop, tv, ...) adalah sinyal kategori,
+// bukan bagian dari nama produk — jangan diwajibkan saat AND-match.
+const isTypeWord = (w) => CATEGORY_HINTS.some(([rx]) => rx.test(w));
+
+/**
+ * Retrieval hibrida: filter kategori+harga, lalu AND-match nama/brand,
+ * fallback text-score, terakhir produk terpopuler dalam filter.
+ */
+async function findRelevantProducts(message, { limit = 5, select = 'name brand price category images specifications avgRating' } = {}) {
+  const base = { isActive: true };
+  const catHint = CATEGORY_HINTS.find(([rx]) => rx.test(message));
+  if (catHint) {
+    const cat = await Category.findOne({ slug: catHint[1] }).lean();
+    if (cat) base.category = cat._id;
+  }
+  const { maxPrice, minPrice } = parsePriceIDR(message);
+  if (maxPrice) base.price = { ...(base.price || {}), $lte: maxPrice };
+  if (minPrice) base.price = { ...(base.price || {}), $gte: minPrice };
+
+  const words = keywordsOf(message);
+  const andWords = words.filter((w) => !isTypeWord(w));
+  const q = (f, sort, proj) => Product.find(f, proj).sort(sort).limit(limit)
+    .populate('category', 'name slug').select(select).lean();
+
+  if (andWords.length) {
+    const andFilter = {
+      ...base,
+      $and: andWords.map((w) => {
+        const rx = new RegExp(escapeRegex(w), 'i');
+        return { $or: [{ name: rx }, { brand: rx }] };
+      }),
+    };
+    const hits = await q(andFilter, { avgRating: -1, reviewCount: -1 });
+    if (hits.length) return hits;
+  }
+  if (words.length) {
+    try {
+      const textHits = await q(
+        { ...base, $text: { $search: words.join(' ') } },
+        { score: { $meta: 'textScore' } },
+        { score: { $meta: 'textScore' } }
+      );
+      if (textHits.length) return textHits;
+    } catch (_) { /* text index tidak tersedia */ }
+  }
+  return q(base, { avgRating: -1, reviewCount: -1 });
+}
 
 /**
  * @desc    AI Assistant - jawab pertanyaan tentang produk
@@ -26,21 +121,12 @@ const aiAssistant = async (req, res) => {
     }
 
     // Ambil produk yang relevan dari database (max 5)
-    const searchTerms = message.split(' ').filter((w) => w.length > 3).join(' ');
     let products = [];
     try {
-      products = await Product.find(
-        { $text: { $search: searchTerms }, isActive: true },
-        { score: { $meta: 'textScore' } }
-      )
-        .sort({ score: { $meta: 'textScore' } })
-        .limit(5)
-        .populate('category', 'name')
-        .select('name brand price category specifications avgRating')
-        .lean();
+      products = await findRelevantProducts(message, { limit: 5 });
     } catch (_) {
-      // Fallback: ambil produk terbaru jika search gagal
       products = await Product.find({ isActive: true })
+        .sort({ avgRating: -1 })
         .limit(5)
         .populate('category', 'name')
         .select('name brand price category specifications avgRating')
@@ -64,7 +150,7 @@ ${productContext}
 
 Pertanyaan pelanggan: ${message}
 
-Jawab dengan bahasa Indonesia yang ramah, informatif, dan natural. Fokus pada informasi yang relevan dari data produk di atas. Jika data tidak cukup, sampaikan dengan sopan. Jangan menyebutkan bahwa kamu AI language model.`;
+Jawab dengan bahasa Indonesia yang ramah, informatif, dan natural. HANYA rekomendasikan produk dari data di atas — jangan mengarang produk atau spesifikasi lain. Jika pelanggan menyebut batas harga, pastikan rekomendasimu sesuai batas itu. Jika data tidak cukup, sampaikan dengan sopan. Jangan menyebutkan bahwa kamu AI language model.`;
 
     const answer = await generateWithRetry(prompt, { maxTokens: 800 });
 
@@ -296,24 +382,55 @@ Hanya kembalikan JSON, tidak ada teks lain:`;
 
     // Bangun query MongoDB berdasarkan filter yang diekstrak
     const mongoFilter = { isActive: true };
-    if (filters.keywords?.length > 0) {
-      mongoFilter.$text = { $search: filters.keywords.join(' ') };
+    const CATEGORY_SLUG_MAP = {
+      smartphone: 'smartphone', hp: 'smartphone', laptop: 'laptop',
+      kamera: 'kamera', camera: 'kamera', headphone: 'headphone',
+      audio: 'headphone', earphone: 'headphone', tv: 'smart-tv', 'smart-tv': 'smart-tv',
+    };
+    const slug = CATEGORY_SLUG_MAP[String(filters.category || '').toLowerCase()];
+    if (slug) {
+      const cat = await Category.findOne({ slug }).lean();
+      if (cat) mongoFilter.category = cat._id;
     }
     if (filters.maxPrice) mongoFilter.price = { ...mongoFilter.price, $lte: filters.maxPrice };
     if (filters.minPrice) mongoFilter.price = { ...mongoFilter.price, $gte: filters.minPrice };
     if (filters.brands?.length > 0) {
-      mongoFilter.brand = { $in: filters.brands.map((b) => new RegExp(b, 'i')) };
+      mongoFilter.brand = { $in: filters.brands.map((b) => new RegExp(escapeRegex(b), 'i')) };
     }
 
-    let products;
-    if (filters.keywords?.length > 0) {
-      products = await Product.find(mongoFilter, { score: { $meta: 'textScore' } })
-        .sort({ score: { $meta: 'textScore' } })
+    // Cari dengan AND-match nama/brand dulu, fallback ke text-score
+    const kw = keywordsOf((filters.keywords || []).join(' '));
+    const andKw = kw.filter((w) => !isTypeWord(w));
+    let products = [];
+    if (andKw.length) {
+      products = await Product.find({
+        ...mongoFilter,
+        $and: andKw.map((w) => {
+          const rx = new RegExp(escapeRegex(w), 'i');
+          return { $or: [{ name: rx }, { brand: rx }] };
+        }),
+      })
+        .sort({ avgRating: -1, reviewCount: -1 })
         .limit(10)
         .populate('category', 'name')
         .select('name brand price category images avgRating specifications')
         .lean();
-    } else {
+
+      if (!products.length) {
+        try {
+          products = await Product.find(
+            { ...mongoFilter, $text: { $search: kw.join(' ') } },
+            { score: { $meta: 'textScore' } }
+          )
+            .sort({ score: { $meta: 'textScore' } })
+            .limit(10)
+            .populate('category', 'name')
+            .select('name brand price category images avgRating specifications')
+            .lean();
+        } catch (_) { /* abaikan */ }
+      }
+    }
+    if (!products.length) {
       products = await Product.find(mongoFilter)
         .sort({ avgRating: -1 })
         .limit(10)

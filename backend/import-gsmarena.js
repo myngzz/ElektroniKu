@@ -17,7 +17,7 @@ const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_SECRET_KEY || 'minioadmin123',
 });
 const BUCKET = process.env.MINIO_BUCKET || 'products';
-const PUBLIC_MINIO_URL = process.env.MINIO_PUBLIC_URL || 'http://localhost:9000';
+const PUBLIC_MINIO_URL = process.env.MINIO_PUBLIC_URL || ''; // kosong = URL relatif via proxy nginx
 
 const BRAND_THEME = {
   samsung: ['#1428A0', '#0070C0'], apple: ['#1c1c1e', '#3a3a3c'],

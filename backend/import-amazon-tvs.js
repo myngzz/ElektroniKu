@@ -18,7 +18,7 @@ const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_SECRET_KEY || 'minioadmin123',
 });
 const BUCKET = process.env.MINIO_BUCKET || 'products';
-const PUBLIC_MINIO_URL = process.env.MINIO_PUBLIC_URL || 'http://localhost:9000';
+const PUBLIC_MINIO_URL = process.env.MINIO_PUBLIC_URL || ''; // kosong = URL relatif via proxy nginx
 const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36';
 const DELAY_MS = 200;
 
@@ -51,7 +51,7 @@ async function run() {
     let created = 0, noImg = 0;
     for (const d of fresh) {
       const urls = [];
-      for (let i = 0; i < Math.min(d.images.length, 2); i++) {
+      for (let i = 0; i < Math.min(d.images.length, 3); i++) {
         const img = await download(d.images[i]);
         if (img) {
           const ext = img.type.includes('png') ? 'png' : 'jpg';
@@ -69,7 +69,7 @@ async function run() {
         description: d.description, specifications: d.specs,
         tags: d.tags, isActive: true,
         isFeatured: d.rating_count > 10000 && Math.random() < 0.3,
-        avgRating: d.rating || 0, reviewCount: 0,
+        avgRating: d.rating || 0, reviewCount: d.rating_count || 0,
         metaTitle: `${d.name.slice(0, 140)} - Harga & Spesifikasi`,
         metaDescription: d.description.slice(0, 160),
       });
