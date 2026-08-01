@@ -41,3 +41,4 @@ coverage/
 *.pem
 .vercel
 migration/
+elektroniku-local-bundle.zip
