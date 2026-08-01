@@ -15,7 +15,59 @@ const STOPWORDS = new Set([
   'bawah', 'diatas', 'atas', 'sekitar', 'juta', 'jutaan', 'ribu', 'ribuan', 'rp',
   'di', 'ke', 'dari', 'ada', 'punya', 'buat', 'untukku', 'produk', 'barang', 'beli',
   'the', 'best', 'for', 'with', 'and',
+  // kata use-case: tidak pernah muncul di nama produk, jangan di-AND-match
+  'kerja', 'kantor', 'bisnis', 'sekolah', 'kuliah', 'harian', 'pemula', 'profesional',
 ]);
+
+// Kata subjektif harga → mode ranking deterministik (LLM sering mengabaikannya)
+const PRICE_INTENTS = [
+  [/termurah|paling murah|\bmurah\b|budget|hemat|terjangkau|ekonomis|low ?end/i, 'cheap'],
+  [/termahal|paling mahal|premium|flagship|mewah|high ?end|kelas atas/i, 'premium'],
+];
+const detectPriceIntent = (text) => (PRICE_INTENTS.find(([rx]) => rx.test(text)) || [])[1] || null;
+
+// Kata deskriptif Indonesia → istilah yang benar-benar muncul di nama produk
+const WORD_SYNONYMS = {
+  tipis: 'slim|thin|\\bair\\b|lite|ultrabook|zenbook',
+  ringan: 'light|slim|\\bair\\b|lite',
+};
+const wordToRegex = (w) => new RegExp(WORD_SYNONYMS[w] || escapeRegex(w), 'i');
+
+const RANK_FIELDS = {
+  name: 1, brand: 1, price: 1, category: 1, images: 1,
+  specifications: 1, avgRating: 1, reviewCount: 1,
+};
+
+/**
+ * Ranking: 'cheap' → termurah, 'premium' → termahal, default → popularitas
+ * (rating dibobot log jumlah ulasan, agar rating 5.0 dari 2 ulasan tidak
+ * mengalahkan 4.8 dari 500 ulasan).
+ */
+async function rankProducts(filter, { intent = null, limit = 5 } = {}) {
+  const pipeline = [{ $match: filter }];
+  if (intent === 'cheap') {
+    pipeline.push({ $sort: { price: 1, avgRating: -1 } });
+  } else if (intent === 'premium') {
+    pipeline.push({ $sort: { price: -1, avgRating: -1 } });
+  } else {
+    pipeline.push(
+      {
+        $addFields: {
+          popScore: {
+            $multiply: [
+              { $ifNull: ['$avgRating', 0] },
+              { $ln: { $add: [{ $ifNull: ['$reviewCount', 0] }, 2] } },
+            ],
+          },
+        },
+      },
+      { $sort: { popScore: -1, avgRating: -1 } }
+    );
+  }
+  pipeline.push({ $limit: limit }, { $project: RANK_FIELDS });
+  const docs = await Product.aggregate(pipeline);
+  return Product.populate(docs, { path: 'category', select: 'name slug' });
+}
 
 const CATEGORY_HINTS = [
   [/smartphone|handphone|\bhp\b|ponsel|iphone|android|galaxy|pixel/i, 'smartphone'],
@@ -72,6 +124,7 @@ async function findRelevantProducts(message, { limit = 5, select = 'name brand p
   if (maxPrice) base.price = { ...(base.price || {}), $lte: maxPrice };
   if (minPrice) base.price = { ...(base.price || {}), $gte: minPrice };
 
+  const intent = detectPriceIntent(message);
   const words = keywordsOf(message);
   const andWords = words.filter((w) => !isTypeWord(w));
   const q = (f, sort, proj) => Product.find(f, proj).sort(sort).limit(limit)
@@ -81,11 +134,11 @@ async function findRelevantProducts(message, { limit = 5, select = 'name brand p
     const andFilter = {
       ...base,
       $and: andWords.map((w) => {
-        const rx = new RegExp(escapeRegex(w), 'i');
+        const rx = wordToRegex(w);
         return { $or: [{ name: rx }, { brand: rx }] };
       }),
     };
-    const hits = await q(andFilter, { avgRating: -1, reviewCount: -1 });
+    const hits = await rankProducts(andFilter, { intent, limit });
     if (hits.length) return hits;
   }
   if (words.length) {
@@ -98,7 +151,7 @@ async function findRelevantProducts(message, { limit = 5, select = 'name brand p
       if (textHits.length) return textHits;
     } catch (_) { /* text index tidak tersedia */ }
   }
-  return q(base, { avgRating: -1, reviewCount: -1 });
+  return rankProducts(base, { intent, limit });
 }
 
 /**
@@ -399,22 +452,18 @@ Hanya kembalikan JSON, tidak ada teks lain:`;
     }
 
     // Cari dengan AND-match nama/brand dulu, fallback ke text-score
+    const intent = detectPriceIntent(query);
     const kw = keywordsOf((filters.keywords || []).join(' '));
     const andKw = kw.filter((w) => !isTypeWord(w));
     let products = [];
     if (andKw.length) {
-      products = await Product.find({
+      products = await rankProducts({
         ...mongoFilter,
         $and: andKw.map((w) => {
-          const rx = new RegExp(escapeRegex(w), 'i');
+          const rx = wordToRegex(w);
           return { $or: [{ name: rx }, { brand: rx }] };
         }),
-      })
-        .sort({ avgRating: -1, reviewCount: -1 })
-        .limit(10)
-        .populate('category', 'name')
-        .select('name brand price category images avgRating specifications')
-        .lean();
+      }, { intent, limit: 10 });
 
       if (!products.length) {
         try {
@@ -431,12 +480,7 @@ Hanya kembalikan JSON, tidak ada teks lain:`;
       }
     }
     if (!products.length) {
-      products = await Product.find(mongoFilter)
-        .sort({ avgRating: -1 })
-        .limit(10)
-        .populate('category', 'name')
-        .select('name brand price category images avgRating specifications')
-        .lean();
+      products = await rankProducts(mongoFilter, { intent, limit: 10 });
     }
 
     const result = {
