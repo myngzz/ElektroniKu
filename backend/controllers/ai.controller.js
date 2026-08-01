@@ -154,6 +154,13 @@ async function findRelevantProducts(message, { limit = 5, select = 'name brand p
   return rankProducts(base, { intent, limit });
 }
 
+// Pertanyaan menyangkut produk/belanja? Jika tidak, AI menjawab bebas (mode umum).
+const PRODUCT_INTENT_WORDS = /rekomendasi|rekomendasikan|carikan|\bcari\b|beli|murah|termurah|mahal|termahal|terbaik|bandingkan|harga|budget|stok|diskon|promo|jual|produk|pilihan|opsi/i;
+const hasProductIntent = (message) =>
+  CATEGORY_HINTS.some(([rx]) => rx.test(message))
+  || PRODUCT_INTENT_WORDS.test(message)
+  || Object.keys(parsePriceIDR(message)).length > 0;
+
 /**
  * @desc    AI Assistant - jawab pertanyaan tentang produk
  * @route   POST /api/ai/assistant
@@ -173,37 +180,48 @@ const aiAssistant = async (req, res) => {
       return res.json({ success: true, data: cached, cached: true });
     }
 
-    // Ambil produk yang relevan dari database (max 5)
+    // Ambil produk relevan hanya jika pertanyaannya soal produk/belanja
+    const productIntent = hasProductIntent(message);
     let products = [];
-    try {
-      products = await findRelevantProducts(message, { limit: 5 });
-    } catch (_) {
-      products = await Product.find({ isActive: true })
-        .sort({ avgRating: -1 })
-        .limit(5)
-        .populate('category', 'name')
-        .select('name brand price category specifications avgRating')
-        .lean();
+    if (productIntent) {
+      try {
+        products = await findRelevantProducts(message, { limit: 5 });
+      } catch (_) {
+        products = await Product.find({ isActive: true })
+          .sort({ avgRating: -1 })
+          .limit(5)
+          .populate('category', 'name')
+          .select('name brand price category specifications avgRating')
+          .lean();
+      }
     }
 
-    // Buat konteks produk
-    const productContext = products.length > 0
-      ? products.map((p) => {
-          const specs = p.specifications instanceof Map
-            ? Object.fromEntries(p.specifications)
-            : (p.specifications || {});
-          return `- ${p.name} (${p.brand}, ${p.category?.name || 'Elektronik'}): Rp${p.price?.toLocaleString('id-ID')}, Rating: ${p.avgRating}/5, Spesifikasi: ${JSON.stringify(specs)}`;
-        }).join('\n')
-      : 'Tidak ada produk tersedia saat ini.';
+    let prompt;
+    if (productIntent) {
+      const productContext = products.length > 0
+        ? products.map((p) => {
+            const specs = p.specifications instanceof Map
+              ? Object.fromEntries(p.specifications)
+              : (p.specifications || {});
+            return `- ${p.name} (${p.brand}, ${p.category?.name || 'Elektronik'}): Rp${p.price?.toLocaleString('id-ID')}, Rating: ${p.avgRating}/5, Spesifikasi: ${JSON.stringify(specs)}`;
+          }).join('\n')
+        : 'Tidak ada produk tersedia saat ini.';
 
-    const prompt = `Kamu adalah asisten belanja ElektroniKu yang membantu pelanggan memilih produk elektronik.
+      prompt = `Kamu adalah asisten belanja ElektroniKu yang membantu pelanggan memilih produk elektronik.
 
 Data produk yang tersedia:
 ${productContext}
 
 Pertanyaan pelanggan: ${message}
 
-Jawab dengan bahasa Indonesia yang ramah, informatif, dan natural. HANYA rekomendasikan produk dari data di atas — jangan mengarang produk atau spesifikasi lain. Jika pelanggan menyebut batas harga, pastikan rekomendasimu sesuai batas itu. Jika data tidak cukup, sampaikan dengan sopan. Jangan menyebutkan bahwa kamu AI language model.`;
+Jawab dengan bahasa Indonesia yang ramah, informatif, dan natural. HANYA rekomendasikan produk dari data di atas — jangan mengarang produk atau spesifikasi lain. Jika pelanggan menyebut batas harga, pastikan rekomendasimu sesuai batas itu. Jika data tidak cukup, sampaikan dengan sopan. Boleh menambahkan penjelasan umum seputar elektronik jika membantu. Jangan menyebutkan bahwa kamu AI language model.`;
+    } else {
+      prompt = `Kamu adalah asisten belanja ElektroniKu, toko online elektronik Indonesia. Kamu ramah dan berpengetahuan luas tentang teknologi, elektronik, dan topik umum.
+
+Pertanyaan pelanggan: ${message}
+
+Jawab dengan bahasa Indonesia yang natural dan membantu, memakai pengetahuan umummu (istilah teknis, tips penggunaan/perawatan, perbandingan teknologi, atau pertanyaan umum lain). Jika relevan, tawarkan di akhir untuk mencarikan produk terkait di ElektroniKu. Jangan mengarang harga atau stok produk ElektroniKu. Jangan menyebutkan bahwa kamu AI language model.`;
+    }
 
     const answer = await generateWithRetry(prompt, { maxTokens: 800 });
 
